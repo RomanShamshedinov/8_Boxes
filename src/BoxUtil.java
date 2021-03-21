@@ -4,7 +4,6 @@ public class BoxUtil {
     //Box(dest) в которую будем копировать может быть типизирована любым родителем объекта содержащимся в Box(src)
     public static <T> void copyFromBoxToBox(final Box<T> src, final Box<? super T> dest) {
         dest.putElement(src.getElement());
-        System.out.println("Скопировал");
     }
 
     // скопировать содержимое из Box(src) которая может быть типизирована только классом Fruit и его наследниками,
@@ -17,11 +16,20 @@ public class BoxUtil {
     }
 
 
-    //вывести в консоль (toString()) объект второй коробки
-    public static <S extends Box<T>, T> void printElementFromTwoBoxes(final Box<S> box) {
-        Box<T> box1 = box.getElement();
-        System.out.println(box1.getElement());
+    //   вывести в консоль (toString()) объект второй коробки
+    public static <T extends Box<T>> void printElementFromTwoBoxes(final Box<T> box) {
+        if (box != null) {
+            T box1 = box.getElement();
+            if (box1 != null) {
+                System.out.println(box1.getElement());
+            } else {
+                System.out.println("Во второй коробке пусто!");
+            }
+        } else {
+            System.out.println("Не передавай пустоту!");
+        }
     }
+
 
     /**
      * вывести в консоль (toString()) объект последней коробки
@@ -29,24 +37,22 @@ public class BoxUtil {
      * box Box, которая содержит в себе любое кол-во вложенных Box, в последней из которых может быть любой объект.
      *
      * @param <T> is T
-     * @param <S> is S
      * @param box is box
      */
 
-    public static <T extends Box<T>, S extends Fruit> void printElementFromBoxes(final Box<T> box) {
-        Box<T> boxT = new Box<>();
-        boolean qwerty = true;
-        while (qwerty) {
-            try {
-                boxT = box.getElement();
-                box.putElement(boxT.getElement());
-            } catch (ClassCastException e) {
-                System.out.println("Последний элемент это " + boxT.getElement());
-                qwerty = false;
-            } catch (NullPointerException e) {
-                System.out.println("Коробка пуста!");
-                qwerty = false;
+    public static <T> void printElementFromBoxes(final Box<T> box) {
+        Object element = box;
+        if (element != null) {
+            while (element instanceof Box && ((Box<?>) element).getElement() != null) {
+                element = ((Box<?>) element).getElement();
             }
+            if (element instanceof Box) {
+                System.out.println("В последней коробке пусто!");
+            } else {
+                System.out.println("Последний элемент " + element);
+            }
+        } else {
+            System.out.println("Не передавай пустоту!");
         }
     }
 }

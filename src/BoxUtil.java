@@ -9,10 +9,15 @@ public class BoxUtil {
     // скопировать содержимое из Box(src) которая может быть типизирована только классом Fruit и его наследниками,
     // при условии, что содержащийся фрукт свежий (fresh == true).
     //Box(dest) в которую будем копировать может быть типизирована любым родителем объекта содержащимся в Box(src)
-    public static <T> void copyFreshFruitFromBoxToBox(final Box<? extends Fruit> src, final Box<? super Fruit> dest) {
-        if (src.getElement().getFresh()) {
-            dest.putElement(src.getElement());
+    public static <T extends Fruit> void copyFreshFruitFromBoxToBox(final Box<T> src, final Box<? super T> dest) {
+        if (src.getElement() != null) {
+            if (src.getElement().getFresh()) {
+                dest.putElement(src.getElement());
+            }
+        } else {
+            System.out.println("А фруктов то нет!");
         }
+
     }
 
 
